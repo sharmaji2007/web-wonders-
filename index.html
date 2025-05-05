@@ -1,0 +1,205 @@
+import React, { useState, useEffect } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Input } from "@/components/ui/input";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+
+const features = [
+  {
+    title: "Multi-Currency Support",
+    description:
+      "Handle multiple currencies (INR, USD, EUR, JPY, etc.) with dynamic addition and formatting.",
+    category: "Core",
+    image: "/images/currency-support.png"
+  },
+  {
+    title: "Real-Time Exchange Rates",
+    description:
+      "Auto-fetch live conversion rates from APIs, with manual override and refresh options.",
+    category: "Core",
+    image: "/images/exchange-rates.png"
+  },
+  {
+    title: "Currency Conversion",
+    description:
+      "Convert amounts between currencies, with historical conversion tracking.",
+    category: "Core",
+    image: "/images/conversion.png"
+  },
+  {
+    title: "Investment Tracking",
+    description:
+      "Manage and view investments in native currencies with unified base currency views.",
+    category: "Finance",
+    image: "/images/investment.png"
+  },
+  {
+    title: "Multi-Currency Wallets",
+    description:
+      "Separate wallets for each currency, supporting deposits, withdrawals, and transfers.",
+    category: "Finance",
+    image: "/images/wallets.png"
+  },
+  {
+    title: "Currency Value Forecasting",
+    description:
+      "AI/ML-based predictive analytics for currency trends and future values.",
+    category: "AI & Forecast",
+    image: "/images/forecasting.png"
+  },
+  {
+    title: "Transaction Handling",
+    description:
+      "Store transactions with original currency, tax, and multi-currency splits.",
+    category: "Transactions",
+    image: "/images/transactions.png"
+  },
+  {
+    title: "Historical Data & Charts",
+    description:
+      "Track exchange rate history and visualize trends over time (7d, 30d, 1y).",
+    category: "Analytics",
+    image: "/images/history.png"
+  },
+  {
+    title: "Accounting & Reporting",
+    description:
+      "Reports in any currency, with auto gain/loss calculation and balance revaluation.",
+    category: "Reports",
+    image: "/images/reports.png"
+  },
+  {
+    title: "User Preferences",
+    description:
+      "Set base currency, format preferences, and rate providers.",
+    category: "Settings",
+    image: "/images/preferences.png"
+  },
+  {
+    title: "Security & Audit Logs",
+    description:
+      "Secure handling of currency data with logs for rate changes and overrides.",
+    category: "Security",
+    image: "/images/security.png"
+  }
+];
+
+const rateHistory = [
+  { date: "Mon", USD: 83.1 },
+  { date: "Tue", USD: 83.2 },
+  { date: "Wed", USD: 83.15 },
+  { date: "Thu", USD: 83.05 },
+  { date: "Fri", USD: 83.25 }
+];
+
+const LiveDashboard = () => {
+  const [rates, setRates] = useState({ USD: 83.1, EUR: 90.4, GBP: 105.3 });
+
+  useEffect(() => {
+    const fetchRates = async () => {
+      // const res = await fetch("https://api.exchangerate-api.com/v4/latest/INR");
+      // const data = await res.json();
+      // setRates(data.rates);
+    };
+    fetchRates();
+  }, []);
+
+  return (
+    <div className="mt-10">
+      <h2 className="text-2xl font-bold mb-6 text-green-400 text-center">Live Currency Dashboard</h2>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        {Object.entries(rates).map(([currency, value]) => (
+          <Card key={currency} className="bg-zinc-900 border-zinc-800 text-white">
+            <CardContent className="p-4">
+              <h3 className="text-lg font-semibold">1 INR = {value} {currency}</h3>
+              <p className="text-sm text-zinc-400 mt-1">Updated just now</p>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+      <div className="bg-zinc-900 p-4 rounded-xl">
+        <ResponsiveContainer width="100%" height={300}>
+          <LineChart data={rateHistory} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="#444" />
+            <XAxis dataKey="date" stroke="#ccc" />
+            <YAxis stroke="#ccc" />
+            <Tooltip contentStyle={{ backgroundColor: '#222', borderColor: '#555' }} />
+            <Line type="monotone" dataKey="USD" stroke="#4ade80" strokeWidth={2} dot={true} />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+    </div>
+  );
+};
+
+const MultiCurrencySystem = () => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const filteredFeatures = features.filter(
+    (feature) =>
+      feature.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      feature.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      feature.category.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  return (
+    <div className="bg-zinc-950 text-white min-h-screen p-6 md:p-10">
+      <div className="max-w-5xl mx-auto">
+        <h1 className="text-4xl font-bold mb-4 text-center text-green-400">Multi-Currency System</h1>
+        <p className="text-center text-zinc-400 mb-8 max-w-2xl mx-auto">
+          Manage currencies with real-time rates, smart forecasting, historical charts, and complete investment tracking. Built for global finance with security, flexibility, and speed.
+        </p>
+
+        <LiveDashboard />
+
+        <div className="my-10">
+          <h2 className="text-2xl font-bold mb-4 text-green-400 text-center">Crypto Market News</h2>
+          <div className="flex justify-center">
+            <iframe
+              src="https://widget.coinlib.io/widget?type=full_v2&theme=dark&cnt=10&pref_coin_id=1505"
+              width="100%"
+              height="500px"
+              scrolling="auto"
+              marginWidth="0"
+              marginHeight="0"
+              frameBorder="0"
+              className="rounded-xl w-full max-w-5xl"
+            ></iframe>
+          </div>
+        </div>
+
+        <Input
+          placeholder="Search features..."
+          className="my-6 max-w-md mx-auto text-black"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <ScrollArea className="h-[70vh]">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {filteredFeatures.map((feature, index) => (
+              <Card key={index} className="bg-zinc-900 border-zinc-800">
+                <CardContent className="p-4">
+                  <img
+                    src={feature.image}
+                    alt={feature.title}
+                    className="w-full h-40 object-cover rounded-xl mb-3"
+                  />
+                  <h2 className="text-xl font-semibold text-green-400 mb-1">
+                    {feature.title}
+                  </h2>
+                  <p className="text-zinc-400 text-xs italic mb-2">
+                    Category: {feature.category}
+                  </p>
+                  <p className="text-zinc-300 text-sm md:text-base">
+                    {feature.description}
+                  </p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </ScrollArea>
+      </div>
+    </div>
+  );
+};
+
+export default MultiCurrencySystem;
